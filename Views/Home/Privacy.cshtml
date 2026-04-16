@@ -1,0 +1,28 @@
+﻿@{
+    ViewData["Title"] = "Quyền riêng tư";
+}
+
+<div class="p-8 max-w-2xl mx-auto">
+    <div class="flex items-center gap-4 mb-8">
+        <a asp-action="Settings" class="p-2 bg-zinc-100 rounded-xl"><i class="material-icons text-zinc-500">arrow_back</i></a>
+        <h1 class="text-3xl font-black">Sự riêng tư</h1>
+    </div>
+
+    <div class="bg-white dark:bg-zinc-900 rounded-[2.5rem] border border-zinc-100 dark:border-zinc-800 p-8 space-y-8">
+        <div class="flex justify-between items-center">
+            <div>
+                <p class="font-bold">Discovery (Khám phá)</p>
+                <p class="text-xs text-zinc-400">Khi tắt, hồ sơ của bạn sẽ không hiện ở danh sách quẹt.</p>
+            </div>
+            <div class="w-12 h-6 bg-rose-500 rounded-full relative"><span class="absolute right-1 top-1 w-4 h-4 bg-white rounded-full"></span></div>
+        </div>
+
+        <div class="flex justify-between items-center">
+            <div>
+                <p class="font-bold">Profile Visibility</p>
+                <p class="text-xs text-zinc-400">Chỉ hiển thị hồ sơ với những người bạn đã thích.</p>
+            </div>
+            <div class="w-12 h-6 bg-zinc-200 rounded-full relative"><span class="absolute left-1 top-1 w-4 h-4 bg-white rounded-full"></span></div>
+        </div>
+    </div>
+</div>

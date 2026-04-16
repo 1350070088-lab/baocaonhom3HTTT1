@@ -1,0 +1,66 @@
+@{
+    ViewData["Title"] = "Hoạt động";
+}
+
+<div class="p-8 max-w-4xl mx-auto min-h-screen">
+    <h1 class="text-4xl font-black text-white mb-2 tracking-tighter">Hoạt động</h1>
+    <p class="text-zinc-500 mb-8 font-medium">Theo dõi những người đã tương tác với bạn gần đây.</p>
+
+    <div class="space-y-4">
+        
+        <div class="bg-zinc-900/50 border border-zinc-800 p-4 rounded-2xl flex items-center justify-between hover:bg-zinc-800/80 hover:border-rose-500/50 transition-all cursor-pointer group">
+            <div class="flex items-center gap-4">
+                <div class="relative">
+                    <img src="https://i.pravatar.cc/150?u=sarah" class="w-14 h-14 rounded-full object-cover border-2 border-rose-500 shadow-lg shadow-rose-500/20" />
+                    <div class="absolute -bottom-1 -right-1 bg-rose-500 text-white p-1 rounded-full shadow-lg">
+                        <i class="material-icons text-[10px]">favorite</i>
+                    </div>
+                </div>
+                <div>
+                    <p class="text-white font-black text-lg">MinhThu <span class="text-zinc-500 font-medium text-sm ml-2 italic">vừa thích ảnh của bạn</span></p>
+                    <p class="text-rose-500 text-xs font-bold uppercase tracking-widest mt-1 flex items-center gap-1">
+                        <i class="material-icons text-[12px]">schedule</i> 2 phút trước
+                    </p>
+                </div>
+            </div>
+            <i class="material-icons text-zinc-600 group-hover:text-white group-hover:translate-x-1 transition-all">chevron_right</i>
+        </div>
+
+        <div class="bg-zinc-900/50 border border-zinc-800 p-4 rounded-2xl flex items-center justify-between hover:bg-zinc-800/80 hover:border-violet-500/50 transition-all cursor-pointer group">
+            <div class="flex items-center gap-4">
+                <div class="relative">
+                    <img src="https://i.pravatar.cc/150?u=emily" class="w-14 h-14 rounded-full object-cover border-2 border-violet-500 shadow-lg shadow-violet-500/20" />
+                    <div class="absolute -bottom-1 -right-1 bg-violet-500 text-white p-1 rounded-full shadow-lg">
+                        <i class="material-icons text-[10px]">auto_awesome</i>
+                    </div>
+                </div>
+                <div>
+                    <p class="text-white font-black text-lg">KabiCen <span class="text-zinc-500 font-medium text-sm ml-2 italic">đã tương hợp với bạn</span></p>
+                    <p class="text-zinc-500 text-xs font-bold uppercase tracking-widest mt-1 flex items-center gap-1">
+                        <i class="material-icons text-[12px]">schedule</i> 1 giờ trước
+                    </p>
+                </div>
+            </div>
+            <i class="material-icons text-zinc-600 group-hover:text-white group-hover:translate-x-1 transition-all">chevron_right</i>
+        </div>
+
+        <div class="bg-zinc-900/50 border border-zinc-800 p-4 rounded-2xl flex items-center justify-between hover:bg-zinc-800/80 hover:border-blue-500/50 transition-all cursor-pointer group">
+            <div class="flex items-center gap-4">
+                <div class="relative">
+                    <img src="https://i.pravatar.cc/150?u=jack" class="w-14 h-14 rounded-full object-cover border-2 border-blue-500" />
+                    <div class="absolute -bottom-1 -right-1 bg-blue-500 text-white p-1 rounded-full shadow-lg">
+                        <i class="material-icons text-[10px]">send</i>
+                    </div>
+                </div>
+                <div>
+                    <p class="text-white font-black text-lg">KieuMyle <span class="text-zinc-500 font-medium text-sm ml-2 italic">vừa gửi tin nhắn cho bạn</span></p>
+                    <p class="text-blue-500 text-xs font-bold uppercase tracking-widest mt-1 flex items-center gap-1">
+                        <i class="material-icons text-[12px]">schedule</i> 5 giờ trước
+                    </p>
+                </div>
+            </div>
+            <i class="material-icons text-zinc-600 group-hover:text-white group-hover:translate-x-1 transition-all">chevron_right</i>
+        </div>
+
+    </div>
+</div>

@@ -1,0 +1,152 @@
+@model IEnumerable<DatingWebb.Models.AppUser>
+@{
+    ViewData["Title"] = "Khám phá - Modern Love";
+    // Lấy người đầu tiên trong danh sách
+    var firstUser = Model.FirstOrDefault();
+}
+
+<div class="flex-1 flex flex-col items-center justify-center p-6 min-h-screen relative overflow-hidden">
+    
+    <div class="w-full max-w-7xl flex justify-between items-center mb-8 px-4 z-10">
+        <h1 class="text-4xl font-black text-white tracking-tighter">Khám Phá</h1>
+        <div class="flex gap-3">
+            <button class="w-12 h-12 rounded-2xl bg-zinc-800/50 backdrop-blur-md flex items-center justify-center border border-zinc-700 hover:bg-zinc-700 transition-all">
+                <i class="material-icons text-zinc-400">tune</i>
+            </button>
+        </div>
+    </div>
+
+    <div id="cardStack" class="relative w-full max-w-sm aspect-[3/4] z-20">
+        @if (firstUser != null)
+        {
+            <div class="user-card absolute inset-0 rounded-[3rem] overflow-hidden shadow-2xl transition-all duration-500 bg-zinc-900 border border-white/10" 
+                 data-id="@firstUser.Id" data-name="@firstUser.FullName">
+                
+                @* Dùng ảnh mặc định nếu ImageUrl bị null *@
+                <img src="@(string.IsNullOrEmpty(firstUser.ImageUrl) ? "https://i.pravatar.cc/600" : firstUser.ImageUrl)" class="w-full h-full object-cover" />
+                
+                <div class="absolute inset-0 bg-gradient-to-t from-black/95 via-black/20 to-transparent p-8 flex flex-col justify-end text-white">
+                    <div class="flex items-center gap-2 mb-2">
+                        @* Sửa Name thành FullName để khớp với Model AppUser *@
+                        <h2 class="text-4xl font-extrabold">@firstUser.FullName</h2>
+                        <span class="material-icons text-blue-400 text-sm">verified</span>
+                    </div>
+                    <p class="text-zinc-300 text-sm mb-5">Đang chờ bạn thả tim đó...</p>
+                    <div class="flex gap-2">
+                        <span class="bg-white/10 backdrop-blur-md px-4 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-wider">Hẹn hò</span>
+                        <span class="bg-white/10 backdrop-blur-md px-4 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-wider">Online</span>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+    <div class="flex items-center gap-8 mt-12 z-30">
+        <button onclick="swipe('left')" class="group w-20 h-20 rounded-full bg-zinc-900 border border-zinc-800 shadow-xl flex items-center justify-center text-zinc-500 hover:text-rose-500 hover:border-rose-500/50 transition-all hover:scale-110 active:scale-90">
+            <i class="material-icons text-4xl">close</i>
+        </button>
+        
+        <button onclick="swipe('right')" class="group w-24 h-24 rounded-full bg-gradient-to-br from-rose-500 to-pink-600 shadow-2xl shadow-rose-500/30 flex items-center justify-center text-white hover:scale-110 active:scale-95 transition-all">
+            <i class="material-icons text-5xl">favorite</i>
+        </button>
+        
+        <button onclick="swipe('up')" class="group w-20 h-20 rounded-full bg-zinc-900 border border-zinc-800 shadow-xl flex items-center justify-center text-zinc-500 hover:text-blue-400 hover:border-blue-400/50 transition-all hover:scale-110 active:scale-90">
+            <i class="material-icons text-4xl">star</i>
+        </button>
+    </div>
+
+    <div id="noMoreUsers" class="@(firstUser != null ? "hidden" : "") absolute flex flex-col items-center text-center px-6">
+        <div class="w-24 h-24 bg-zinc-800 rounded-full flex items-center justify-center mb-4 border border-zinc-700">
+            <i class="material-icons text-5xl text-zinc-600">person_search</i>
+        </div>
+        <h3 class="text-xl font-bold text-white">Hết người quanh đây rồi!</h3>
+        <button onclick="location.reload()" class="mt-6 px-6 py-2 bg-rose-500 text-white rounded-xl font-bold text-sm">Tải lại danh sách</button>
+    </div>
+</div>
+
+<script>
+    // FIX LỖI CS0019: Kiểm tra Model trước khi Serialize thay vì dùng toán tử ?? trực tiếp
+    const users = @Html.Raw(Json.Serialize(Model != null ? Model.Skip(1).Select(u => new { 
+        id = u.Id, 
+        name = u.FullName, 
+        imageUrl = string.IsNullOrEmpty(u.ImageUrl) ? "https://i.pravatar.cc/600" : u.ImageUrl 
+    }) : new List<object>()));
+    
+    let notifCount = 0;
+
+    function swipe(direction) {
+        const card = document.querySelector('.user-card');
+        if (!card) return;
+
+        const userId = card.getAttribute('data-id');
+        const userName = card.getAttribute('data-name');
+
+        if (direction === 'right') {
+            notifCount++;
+            const badge = document.getElementById('notif-count');
+            if (badge) {
+                badge.innerText = notifCount;
+                badge.classList.remove('hidden');
+                badge.classList.add('flex');
+                badge.parentElement.classList.add('animate-bounce');
+                setTimeout(() => badge.parentElement.classList.remove('animate-bounce'), 500);
+            }
+
+            const notifList = document.getElementById('notif-list');
+            const emptyMsg = document.getElementById('empty-notif');
+            if (emptyMsg) emptyMsg.remove();
+
+            const newNotif = document.createElement('div');
+            newNotif.className = "p-3 text-[11px] bg-zinc-50 dark:bg-zinc-800/50 rounded-xl border-l-4 border-rose-500 mb-1";
+            newNotif.innerHTML = `<span class="text-zinc-400">Vừa xong:</span> <br><b>Bạn</b> đã thích: <span class="text-rose-500 font-bold">${userName}</span>`;
+            
+            if (notifList) notifList.insertBefore(newNotif, notifList.firstChild);
+
+            fetch(`/Home/LikeUser?id=${userId}`, { method: 'POST' });
+        }
+
+        if (direction === 'left') card.style.transform = 'translateX(-150%) rotate(-30deg)';
+        else if (direction === 'right') card.style.transform = 'translateX(150%) rotate(30deg)';
+        else card.style.transform = 'translateY(-150%) scale(0.5)';
+        
+        card.style.opacity = '0';
+
+        setTimeout(() => {
+            card.remove();
+            loadNextUser();
+        }, 500);
+    }
+
+    function loadNextUser() {
+        if (!users || users.length === 0) {
+            document.getElementById('noMoreUsers').classList.remove('hidden');
+            return;
+        }
+
+        const nextUser = users.shift();
+        const cardStack = document.getElementById('cardStack');
+
+        const newCard = document.createElement('div');
+        newCard.className = "user-card absolute inset-0 rounded-[3rem] overflow-hidden shadow-2xl transition-all duration-500 bg-zinc-900 border border-white/10 opacity-0 transform scale-90";
+        newCard.setAttribute('data-id', nextUser.id);
+        newCard.setAttribute('data-name', nextUser.name); 
+        newCard.innerHTML = `
+            <img src="${nextUser.imageUrl}" class="w-full h-full object-cover" />
+            <div class="absolute inset-0 bg-gradient-to-t from-black/95 via-black/20 to-transparent p-8 flex flex-col justify-end text-white">
+                <div class="flex items-center gap-2 mb-2">
+                    <h2 class="text-4xl font-extrabold">${nextUser.name}</h2>
+                </div>
+                <p class="text-zinc-300 text-sm mb-5">Đang chờ bạn thả tim đó...</p>
+                <div class="flex gap-2">
+                    <span class="bg-white/10 backdrop-blur-md px-4 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-wider">Hẹn hò</span>
+                </div>
+            </div>
+        `;
+
+        cardStack.appendChild(newCard);
+        setTimeout(() => {
+            newCard.style.opacity = '1';
+            newCard.style.transform = 'scale(1)';
+        }, 50);
+    }
+</script>

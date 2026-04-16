@@ -1,0 +1,54 @@
+/* site.css - Custom Modern Love Styles */
+
+/* 1. Thiết lập font chữ và màu nền mượt mà */
+body[b-nr28yy6a8c] {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+}
+
+/* 2. Custom màu cho các thanh Range Input (Chọn khoảng cách ở trang Settings) */
+input[type='range'][b-nr28yy6a8c] {
+    cursor: pointer;
+}
+
+/* 3. Hiệu ứng cho các nút bấm chính */
+.btn-modern-rose[b-nr28yy6a8c] {
+    background: linear-gradient(to right, #f43f5e, #ec4899);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.btn-modern-rose:hover[b-nr28yy6a8c] {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 15px -3px rgba(244, 63, 94, 0.3);
+}
+
+/* 4. Định dạng lại phần footer để không bị dính chặt vào đáy nếu nội dung ngắn */
+html[b-nr28yy6a8c] {
+    height: 100%;
+}
+
+body[b-nr28yy6a8c] {
+    min-height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+/* 5. Tùy chỉnh các thông báo lỗi Validation (Để khớp với tag helpers) */
+.field-validation-error[b-nr28yy6a8c] {
+    color: #f43f5e;
+    font-size: 0.75rem;
+    font-weight: 600;
+    margin-top: 0.25rem;
+    display: block;
+}
+
+.input-validation-error[b-nr28yy6a8c] {
+    border: 1px solid #f43f5e !important;
+}
+
+/* 6. Loại bỏ gạch chân mặc định của thẻ a */
+a[b-nr28yy6a8c] {
+    text-decoration: none !important;
+    color: inherit;
+}

@@ -1,0 +1,39 @@
+<nav class="fixed top-0 w-full z-50 bg-white/60 dark:bg-zinc-950/60 backdrop-blur-xl shadow-xl shadow-rose-500/5 border-b border-zinc-200 dark:border-zinc-800">
+    <div class="flex justify-between items-center w-full px-6 py-4 max-w-screen-2xl mx-auto">
+        <a asp-controller="Home" asp-action="Index" class="text-2xl font-black italic bg-clip-text text-transparent bg-gradient-to-r from-rose-600 to-violet-600">
+            Modern Love
+        </a>
+
+        <div class="hidden md:flex items-center space-x-8">
+            <a asp-controller="Home" asp-action="Discover" 
+               class="@(ViewContext.RouteData.Values["Action"]?.ToString() == "Discover" ? "text-rose-600 font-bold border-b-2 border-rose-600" : "text-zinc-500 hover:text-rose-500 font-medium") pb-1 transition-all">
+               Discover
+            </a>
+
+            <a asp-controller="Home" asp-action="Matches" 
+               class="@(ViewContext.RouteData.Values["Action"]?.ToString() == "Matches" ? "text-rose-600 font-bold border-b-2 border-rose-600" : "text-zinc-500 hover:text-rose-500 font-medium") pb-1 transition-all">
+               Matches
+            </a>
+
+            <a asp-controller="Home" asp-action="Messages" 
+               class="@(ViewContext.RouteData.Values["Action"]?.ToString() == "Messages" ? "text-rose-600 font-bold border-b-2 border-rose-600" : "text-zinc-500 hover:text-rose-500 font-medium") pb-1 transition-all">
+               Messages
+            </a>
+
+            <a asp-controller="Home" asp-action="Profile" 
+               class="@(ViewContext.RouteData.Values["Action"]?.ToString() == "Profile" ? "text-rose-600 font-bold border-b-2 border-rose-600" : "text-zinc-500 hover:text-rose-500 font-medium") pb-1 transition-all">
+               Profile
+            </a>
+        </div>
+
+        <div class="flex items-center space-x-4">
+            <button class="p-2 text-zinc-500 hover:text-rose-500 transition-colors">
+                <i class="material-icons">notifications</i>
+            </button>
+            
+            <a asp-controller="Home" asp-action="Settings" class="bg-gradient-to-r from-rose-600 to-violet-600 text-white px-5 py-2 rounded-full font-bold text-sm shadow-lg shadow-rose-500/20 hover:scale-105 transition-transform">
+                Get Premium
+            </a>
+        </div>
+    </div>
+</nav>

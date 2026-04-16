@@ -1,0 +1,64 @@
+﻿@{
+    ViewData["Title"] = "Chào mừng đến với Modern Love";
+}
+
+<div class="flex-1 overflow-y-auto bg-white min-h-screen">
+    <section class="max-w-7xl mx-auto px-8 py-20 flex flex-col md:flex-row items-center gap-12">
+        @* Cột bên trái: Nội dung giới thiệu *@
+        <div class="flex-1 space-y-6">
+            <span class="inline-block px-4 py-1 bg-rose-50 text-rose-600 rounded-full text-[10px] font-bold tracking-widest uppercase">
+                The Future of Romance
+            </span>
+            
+            <h1 class="text-6xl font-black text-zinc-900 leading-tight tracking-tighter">
+                Hãy tìm kiếm mối liên kết <span class="text-rose-500">rạng rỡ</span> mà bạn xứng đáng có được
+            </h1>
+            
+            <p class="text-zinc-500 text-lg max-w-md">
+                Modern Love là một trải nghiệm biên tập cao cấp dành cho những người lãng mạn hiện đại. Kết nối, trò chuyện và tìm thấy nửa kia của mình.
+            </p>
+            
+            <div class="flex gap-4 pt-4">
+                @* Nút dẫn đến trang Đăng ký *@
+                <a asp-controller="Home" asp-action="Register" 
+                   class="px-8 py-4 bg-rose-500 text-white rounded-2xl font-bold shadow-lg shadow-rose-500/30 hover:bg-rose-600 hover:scale-105 transition-all">
+                    Tham gia ngay
+                </a>
+                
+                @* Nút dẫn đến trang Khám phá (Để quẹt thẻ) *@
+                <a asp-controller="Home" asp-action="Discover" 
+                   class="px-8 py-4 bg-zinc-100 text-zinc-900 rounded-2xl font-bold hover:bg-zinc-200 transition-all">
+                    Khám phá
+                </a>
+            </div>
+        </div>
+
+        @* Cột bên phải: Hình ảnh minh họa *@
+        <div class="flex-1 relative">
+            <div class="relative z-10">
+                <img src="https://images.unsplash.com/photo-1517841905240-472988babdf9?w=800" 
+                     class="rounded-[3rem] shadow-2xl rotate-3 w-full object-cover aspect-[4/5]" 
+                     alt="Modern Love Hero" />
+                
+                @* Thẻ thông báo ảo để trang trí *@
+                <div class="absolute -bottom-6 -left-6 bg-white p-5 rounded-3xl shadow-2xl flex items-center gap-4 border border-zinc-100 animate-bounce">
+                    <div class="w-12 h-12 bg-rose-500 rounded-full flex items-center justify-center text-white shadow-lg shadow-rose-500/40">
+                        <i class="material-icons">favorite</i>
+                    </div>
+                    <div>
+                        <p class="text-[10px] text-zinc-400 font-bold uppercase tracking-wider">Tương hợp mới</p>
+                        <p class="text-lg font-black text-zinc-900">1.2k+ Online</p>
+                    </div>
+                </div>
+
+                @* Trang trí thêm một cái badge góc trên *@
+                <div class="absolute -top-4 -right-4 bg-zinc-900 text-white px-4 py-2 rounded-2xl shadow-xl -rotate-6 border border-white/10">
+                    <p class="text-xs font-bold">Premium Experience ✨</p>
+                </div>
+            </div>
+
+            @* Background trang trí phía sau hình ảnh *@
+            <div class="absolute inset-0 bg-rose-100 rounded-[3rem] -rotate-3 scale-95 translate-x-4 translate-y-4 -z-0"></div>
+        </div>
+    </section>
+</div>

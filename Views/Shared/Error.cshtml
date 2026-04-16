@@ -1,0 +1,27 @@
+﻿@model DatingWebb.Models.ErrorViewModel
+@{
+    ViewData["Title"] = "Lỗi hệ thống";
+}
+
+<div class="flex flex-col items-center justify-center min-h-[60vh] p-10 text-center">
+    <div class="mb-6 w-20 h-20 bg-rose-50 rounded-full flex items-center justify-center">
+        <i class="material-icons text-rose-500 text-5xl">heart_broken</i>
+    </div>
+
+    <h1 class="text-rose-500 text-5xl font-black tracking-tighter">Error.</h1>
+    <h2 class="text-zinc-500 mt-2 text-lg">Đã có lỗi xảy ra trong quá trình xử lý yêu cầu của bạn.</h2>
+
+    @if (Model != null && Model.ShowRequestId)
+    {
+        <div class="mt-6 p-4 bg-zinc-100 rounded-2xl inline-block">
+            <p class="text-xs text-zinc-400 font-bold uppercase tracking-widest mb-1">Mã định danh lỗi</p>
+            <code class="text-rose-600 font-mono font-bold">@Model.RequestId</code>
+        </div>
+    }
+
+    <div class="mt-10">
+        <a href="/" class="px-8 py-3 bg-rose-500 text-white rounded-full font-bold shadow-lg shadow-rose-500/30 hover:scale-105 transition-transform">
+            Quay lại trang chủ
+        </a>
+    </div>
+</div>

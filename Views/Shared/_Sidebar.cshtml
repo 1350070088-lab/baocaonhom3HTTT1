@@ -1,0 +1,65 @@
+<aside class="h-screen w-64 bg-zinc-50 dark:bg-zinc-900 border-r border-zinc-200 dark:border-zinc-800 flex flex-col p-4 gap-2">
+    
+    @* Phần chào mừng người dùng *@
+    <div class="mb-8 px-4 py-6">
+        <h2 class="text-zinc-400 text-[10px] font-bold uppercase tracking-widest mb-1">Chào mừng trở lại</h2>
+        <p class="text-xl font-black text-zinc-900 dark:text-white">Người Dùng</p> 
+    </div>
+
+    @* Danh sách Menu điều hướng *@
+    <nav class="flex-1 space-y-1">
+        <a asp-controller="Home" asp-action="Discover" 
+           class="flex items-center gap-3 @(ViewContext.RouteData.Values["Action"]?.ToString() == "Discover" ? "bg-white dark:bg-zinc-800 text-rose-600 shadow-sm font-semibold" : "text-zinc-500 hover:bg-rose-50 dark:hover:bg-rose-900/20") rounded-2xl p-3 transition-all hover:scale-105">
+            <i class="material-icons">explore</i> <span>Khám phá</span>
+        </a>
+
+        <a asp-controller="Home" asp-action="Matches" 
+           class="flex items-center gap-3 @(ViewContext.RouteData.Values["Action"]?.ToString() == "Matches" ? "bg-white dark:bg-zinc-800 text-rose-600 shadow-sm font-semibold" : "text-zinc-500 hover:bg-rose-50 dark:hover:bg-rose-900/20") p-3 rounded-2xl transition-all">
+            <i class="material-icons">favorite</i> <span>Tương hợp</span>
+        </a>
+
+        <a asp-controller="Home" asp-action="Messages" 
+           class="flex items-center gap-3 @(ViewContext.RouteData.Values["Action"]?.ToString() == "Messages" ? "bg-white dark:bg-zinc-800 text-rose-600 shadow-sm font-semibold" : "text-zinc-500 hover:bg-rose-50 dark:hover:bg-rose-900/20") p-3 rounded-2xl transition-all">
+            <i class="material-icons">chat</i> <span>Tin nhắn</span>
+        </a>
+
+        <a asp-controller="Home" asp-action="Activity" 
+           class="flex items-center gap-3 @(ViewContext.RouteData.Values["Action"]?.ToString() == "Activity" ? "bg-white dark:bg-zinc-800 text-rose-600 shadow-sm font-semibold" : "text-zinc-500 hover:bg-rose-50 dark:hover:bg-rose-900/20") p-3 rounded-2xl transition-all">
+            <i class="material-icons">auto_awesome</i> <span>Hoạt động</span>
+        </a>
+
+        @* Nút Quản trị dành cho Admin (Có chấm đỏ thông báo thật) *@
+        <a asp-controller="Admin" asp-action="Index" 
+           class="flex items-center justify-between gap-3 @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Admin" ? "bg-white dark:bg-zinc-800 text-rose-600 shadow-sm font-semibold" : "text-zinc-500 hover:bg-rose-50 dark:hover:bg-rose-900/20") p-3 rounded-2xl transition-all">
+            <div class="flex items-center gap-3">
+                <i class="material-icons">admin_panel_settings</i> 
+                <span>Quản trị</span>
+            </div>
+            
+            @* Gọi ViewComponent hiển thị số lượng User mới *@
+            <div class="relative">
+                @await Component.InvokeAsync("AdminNotification")
+            </div>
+        </a>
+
+        <a asp-controller="Home" asp-action="Profile" 
+           class="flex items-center gap-3 @(ViewContext.RouteData.Values["Action"]?.ToString() == "Profile" ? "bg-white dark:bg-zinc-800 text-rose-600 shadow-sm font-semibold" : "text-zinc-500 hover:bg-rose-50 dark:hover:bg-rose-900/20") p-3 rounded-2xl transition-all">
+            <i class="material-icons">person</i> <span>Hồ sơ</span>
+        </a>
+
+        <a asp-controller="Home" asp-action="Settings" 
+           class="flex items-center gap-3 @(ViewContext.RouteData.Values["Action"]?.ToString() == "Settings" ? "bg-white dark:bg-zinc-800 text-rose-600 shadow-sm font-semibold" : "text-zinc-500 hover:bg-rose-50 dark:hover:bg-rose-900/20") p-3 rounded-2xl transition-all">
+            <i class="material-icons">settings</i> <span>Cài đặt</span>
+        </a>
+    </nav>
+    
+    @* Thẻ quảng cáo VIP *@
+    <div class="p-4 bg-gradient-to-br from-rose-500 to-violet-600 rounded-3xl text-white shadow-lg shadow-rose-500/30 mt-4">
+        <p class="text-sm font-bold uppercase tracking-tight">Tăng tốc tuần</p>
+        <p class="text-[10px] opacity-90 mb-3">Tăng 3 lần khả năng tìm thấy nửa kia!</p>
+        <button class="w-full bg-white text-rose-600 py-2 rounded-xl text-[10px] font-black hover:bg-zinc-100 transition-colors">
+            NÂNG CẤP NGAY
+        </button>
+    </div>
+
+</aside>

@@ -1,0 +1,112 @@
+<header class="h-20 bg-white dark:bg-zinc-950 border-b border-zinc-200 dark:border-zinc-800 flex items-center justify-between px-8 sticky top-0 z-50">
+    
+    @* Logo ứng dụng *@
+    <div class="flex items-center gap-2">
+        <div class="w-10 h-10 bg-gradient-to-br from-rose-500 to-pink-600 rounded-xl flex items-center justify-center shadow-lg shadow-rose-500/20">
+            <i class="material-icons text-white">auto_awesome</i>
+        </div>
+        <span class="text-2xl font-black italic tracking-tighter bg-gradient-to-r from-rose-500 to-violet-600 bg-clip-text text-transparent ml-2">
+            Modern Love
+        </span>
+    </div>
+
+    @* Menu điều hướng trung tâm *@
+    <nav class="hidden md:flex items-center gap-8">
+        <a asp-controller="Home" asp-action="Discover" 
+           class="relative py-2 text-sm font-black uppercase tracking-widest transition-all @(ViewContext.RouteData.Values["Action"]?.ToString() == "Discover" ? "text-rose-500" : "text-zinc-400 hover:text-zinc-900 dark:hover:text-white")">
+            Khám phá
+            @if (ViewContext.RouteData.Values["Action"]?.ToString() == "Discover") {
+                <span class="absolute -bottom-1 left-0 w-full h-0.5 bg-rose-500 rounded-full"></span>
+            }
+        </a>
+
+        <a asp-controller="Home" asp-action="Matches" 
+           class="relative py-2 text-sm font-black uppercase tracking-widest transition-all @(ViewContext.RouteData.Values["Action"]?.ToString() == "Matches" ? "text-rose-500" : "text-zinc-400 hover:text-zinc-900 dark:hover:text-white")">
+            Tương hợp
+            @if (ViewContext.RouteData.Values["Action"]?.ToString() == "Matches") {
+                <span class="absolute -bottom-1 left-0 w-full h-0.5 bg-rose-500 rounded-full"></span>
+            }
+        </a>
+
+        <a asp-controller="Home" asp-action="Messages" 
+           class="relative py-2 text-sm font-black uppercase tracking-widest transition-all @(ViewContext.RouteData.Values["Action"]?.ToString() == "Messages" ? "text-rose-500" : "text-zinc-400 hover:text-zinc-900 dark:hover:text-white")">
+            Tin nhắn
+            @if (ViewContext.RouteData.Values["Action"]?.ToString() == "Messages") {
+                <span class="absolute -bottom-1 left-0 w-full h-0.5 bg-rose-500 rounded-full"></span>
+            }
+        </a>
+
+        <a asp-controller="Home" asp-action="Activity" 
+           class="relative py-2 text-sm font-black uppercase tracking-widest transition-all @(ViewContext.RouteData.Values["Action"]?.ToString() == "Activity" ? "text-rose-500" : "text-zinc-400 hover:text-zinc-900 dark:hover:text-white")">
+            Hoạt động
+            @if (ViewContext.RouteData.Values["Action"]?.ToString() == "Activity") {
+                <span class="absolute -bottom-1 left-0 w-full h-0.5 bg-rose-500 rounded-full"></span>
+            }
+        </a>
+
+        <a asp-controller="Home" asp-action="Profile" 
+           class="relative py-2 text-sm font-black uppercase tracking-widest transition-all @(ViewContext.RouteData.Values["Action"]?.ToString() == "Profile" ? "text-rose-500" : "text-zinc-400 hover:text-zinc-900 dark:hover:text-white")">
+            Hồ sơ
+            @if (ViewContext.RouteData.Values["Action"]?.ToString() == "Profile") {
+                <span class="absolute -bottom-1 left-0 w-full h-0.5 bg-rose-500 rounded-full"></span>
+            }
+        </a>
+
+        @* Link vào trang Admin - Được tinh chỉnh lại *@
+        <a asp-controller="Admin" asp-action="Index" 
+           class="relative py-2 flex items-center gap-1 text-sm font-black uppercase tracking-widest transition-all @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Admin" ? "text-rose-500" : "text-zinc-400 hover:text-zinc-900 dark:hover:text-white")">
+            Quản trị
+            <div class="relative inline-block mb-3">
+                 @await Component.InvokeAsync("AdminNotification")
+            </div>
+            @if (ViewContext.RouteData.Values["Controller"]?.ToString() == "Admin") {
+                <span class="absolute -bottom-1 left-0 w-full h-0.5 bg-rose-500 rounded-full"></span>
+            }
+        </a>
+    </nav>
+
+    @* Khu vực chức năng bên phải *@
+    <div class="flex items-center gap-5">
+        
+        @* CỤM THÔNG BÁO KIỂU FACEBOOK *@
+        <div class="relative inline-block">
+            <button onclick="toggleNotif()" class="relative w-10 h-10 flex items-center justify-center text-zinc-400 hover:text-rose-500 transition-colors">
+                <i class="material-icons">notifications</i>
+                @* Chấm số thông báo ảo từ JS (cho hành động Like) *@
+                <span id="notif-count" class="hidden absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-rose-500 text-[10px] font-bold text-white border-2 border-white dark:border-zinc-950">
+                    0
+                </span>
+            </button>
+
+            @* Bảng danh sách thông báo thả xuống *@
+            <div id="notif-dropdown" class="hidden absolute right-0 mt-3 w-80 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl shadow-2xl z-[100] overflow-hidden">
+                <div class="p-4 border-b border-zinc-100 dark:border-zinc-800 flex justify-between items-center">
+                    <h3 class="text-sm font-black text-zinc-900 dark:text-white">Thông báo</h3>
+                    <span class="text-[10px] text-rose-500 font-bold cursor-pointer hover:underline">Đánh dấu đã đọc</span>
+                </div>
+                
+                <div id="notif-list" class="max-h-[400px] overflow-y-auto p-2 space-y-1">
+                    <p id="empty-notif" class="text-center py-8 text-zinc-500 text-xs italic">
+                        Chưa có thông báo mới nào
+                    </p>
+                </div>
+
+                <div class="p-3 bg-zinc-50 dark:bg-zinc-800/50 text-center border-t border-zinc-100 dark:border-zinc-800">
+                    <a href="#" class="text-[11px] font-bold text-zinc-500 hover:text-rose-500 transition-colors">Xem tất cả thông báo</a>
+                </div>
+            </div>
+        </div>
+
+        <button class="hidden lg:block bg-gradient-to-r from-rose-500 to-pink-600 hover:from-rose-600 hover:to-pink-700 text-white px-6 py-2.5 rounded-2xl text-[11px] font-black uppercase tracking-[0.15em] shadow-lg shadow-rose-500/30 transition-all hover:scale-105 active:scale-95">
+            Nâng cấp VIP
+        </button>
+
+        <div class="flex items-center gap-3 pl-4 border-l border-zinc-200 dark:border-zinc-800">
+            <div class="text-right hidden sm:block">
+                <p class="text-xs font-black text-zinc-900 dark:text-white leading-none mb-1">Người Dùng</p>
+                <p class="text-[9px] text-zinc-400 font-bold uppercase tracking-tighter">Thành viên Pro</p>
+            </div>
+            <img src="https://ui-avatars.com/api/?name=User+Name&background=f43f5e&color=fff" class="w-10 h-10 rounded-full object-cover border-2 border-zinc-100 dark:border-zinc-800" />
+        </div>
+    </div>
+</header>

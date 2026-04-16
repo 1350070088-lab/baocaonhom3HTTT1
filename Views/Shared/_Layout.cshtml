@@ -1,0 +1,150 @@
+﻿<!DOCTYPE html>
+<html lang="en" class="dark"> 
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Modern Love</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/DatingWebb.styles.css" asp-append-version="true" />
+    
+    <style>
+        body { 
+            overflow-x: hidden; 
+            background-color: #09090b; 
+        }
+        
+        /* Tùy chỉnh thanh cuộn */
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-track { background: #18181b; }
+        ::-webkit-scrollbar-thumb { 
+            background: #3f3f46; 
+            border-radius: 10px; 
+        }
+        ::-webkit-scrollbar-thumb:hover { background: #f43f5e; }
+
+        /* Hiệu ứng chuyển trang mượt mà */
+        main {
+            animation: fadeIn 0.4s ease-out;
+        }
+
+        @@keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Hiệu ứng cho thông báo mới */
+        .notif-item {
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @@keyframes slideIn {
+            from { transform: translateX(20px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+    </style>
+</head>
+<body class="bg-zinc-950 text-zinc-100 selection:bg-rose-500/30">
+
+    <div class="flex min-h-screen"> 
+        @* Thanh bên trái (Menu dọc) *@
+        <aside class="hidden md:block sticky top-0 h-screen flex-shrink-0 border-r border-zinc-800/50">
+            @await Html.PartialAsync("_Sidebar")
+        </aside>
+
+        <div class="flex-1 flex flex-col relative">
+            
+            @* Thanh trên cùng (Menu ngang & Profile) *@
+            @* Chú ý: ViewComponent đếm số người dùng thật nằm bên trong Topbar *@
+            @await Html.PartialAsync("_Topbar")
+
+            @* Nội dung thay đổi theo từng trang *@
+            <main role="main" class="flex-1 overflow-x-hidden">
+                @RenderBody()
+            </main>
+
+            @* Phần chân trang *@
+            <footer class="border-t border-zinc-800/50 py-10 text-center bg-zinc-950">
+                <div class="container mx-auto px-4">
+                    <div class="flex justify-center items-center gap-2 mb-2">
+                        <div class="w-1.5 h-1.5 bg-rose-500 rounded-full animate-pulse"></div>
+                        <p class="text-zinc-500 text-[10px] font-black uppercase tracking-[0.3em]">
+                            &copy; 2026 — <span class="text-rose-500">Modern Love</span>
+                        </p>
+                    </div>
+                    <p class="text-zinc-600 text-[9px] italic">Thiết kế bằng cả trái tim để kết nối mọi người.</p>
+                </div>
+            </footer>
+        </div>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    
+    @* SCRIPT XỬ LÝ THÔNG BÁO TOÀN CỤC *@
+    <script>
+        let notificationCount = 0;
+
+        // Hàm ẩn/hiện bảng thông báo
+        function toggleNotif() {
+            const dropdown = document.getElementById('notif-dropdown');
+            if(dropdown) {
+                dropdown.classList.toggle('hidden');
+            }
+        }
+
+        // Hàm thêm thông báo mới từ hành động Like (Thông báo ảo trên trình duyệt)
+        function addNewNotification(userName) {
+            notificationCount++;
+            
+            const badge = document.getElementById('notif-count');
+            if (badge) {
+                badge.innerText = notificationCount;
+                badge.classList.remove('hidden');
+                badge.classList.add('flex');
+                
+                badge.parentElement.classList.add('animate-bounce');
+                setTimeout(() => badge.parentElement.classList.remove('animate-bounce'), 500);
+            }
+
+            const notifList = document.getElementById('notif-list');
+            const emptyMsg = document.getElementById('empty-notif');
+            
+            if (emptyMsg) emptyMsg.remove();
+
+            const newNotif = document.createElement('div');
+            newNotif.className = "notif-item p-3 text-[11px] hover:bg-zinc-100 dark:hover:bg-zinc-800/50 rounded-xl transition-colors border-b border-zinc-100 dark:border-zinc-800 last:border-0";
+            newNotif.innerHTML = `
+                <div class="flex items-start gap-3">
+                    <div class="w-8 h-8 rounded-full bg-rose-500/10 flex items-center justify-center flex-shrink-0">
+                        <i class="material-icons text-rose-500 text-sm">favorite</i>
+                    </div>
+                    <div>
+                        <p class="text-zinc-900 dark:text-zinc-200">Bạn đã thích <b>${userName}</b></p>
+                        <p class="text-[9px] text-zinc-500 mt-1">Vừa xong</p>
+                    </div>
+                </div>
+            `;
+            
+            if (notifList) {
+                notifList.insertBefore(newNotif, notifList.firstChild);
+            }
+        }
+
+        // Đóng dropdown khi click ra ngoài
+        window.onclick = function(event) {
+            if (!event.target.closest('#notif-dropdown') && !event.target.closest('button[onclick="toggleNotif()"]')) {
+                const dropdown = document.getElementById('notif-dropdown');
+                if (dropdown && !dropdown.classList.contains('hidden')) {
+                    dropdown.classList.add('hidden');
+                }
+            }
+        }
+    </script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
