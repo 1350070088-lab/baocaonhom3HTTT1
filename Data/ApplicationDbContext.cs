@@ -13,8 +13,8 @@ namespace DatingWebb.Data
         // Bảng chứa danh sách người dùng chính
         public DbSet<AppUser> AppUsers { get; set; }
 
-        // ĐỔI TÊN THÀNH UserMatches để khớp với HomeController của m
-        public DbSet<Match> UserMatches { get; set; }
+        // Bảng quản lý các lượt tương hợp (Like/Match)
+        public DbSet<UserMatch> UserMatches { get; set; }
 
         // Bảng quản lý doanh thu/thanh toán
         public DbSet<Payment> Payments { get; set; }
@@ -23,10 +23,39 @@ namespace DatingWebb.Data
         {
             base.OnModelCreating(modelBuilder);
 
-            // Cấu hình tên bảng trong Database
-            modelBuilder.Entity<AppUser>().ToTable("AppUsers");
-            modelBuilder.Entity<Match>().ToTable("UserMatches"); // Đồng bộ tên bảng ở đây luôn
-            modelBuilder.Entity<Payment>().ToTable("Payments");
+            // 1. Cấu hình bảng AppUsers
+            modelBuilder.Entity<AppUser>(entity => {
+                entity.ToTable("AppUsers");
+                entity.HasKey(e => e.Id);
+            });
+
+            // 2. Cấu hình bảng UserMatches và xử lý xung đột khóa ngoại (Foreign Key)
+            // Vì AppUser có 2 mối quan hệ với UserMatch (Người gửi và Người nhận), 
+            // mày cần chặn việc xóa dây chuyền (Restrict) để tránh lỗi khi Update Database.
+            modelBuilder.Entity<UserMatch>(entity => {
+                entity.ToTable("UserMatches");
+                entity.HasKey(e => e.Id);
+
+                // Cấu hình quan hệ với người gửi (User1)
+                entity.HasOne(m => m.User1)
+                      .WithMany(u => u.SentMatches)
+                      .HasForeignKey(m => m.User1Id)
+                      .OnDelete(DeleteBehavior.Restrict); 
+
+                // Cấu hình quan hệ với người nhận (User2)
+                entity.HasOne(m => m.User2)
+                      .WithMany(u => u.ReceivedMatches)
+                      .HasForeignKey(m => m.User2Id)
+                      .OnDelete(DeleteBehavior.Restrict);
+            });
+
+            // 3. Cấu hình bảng Payments
+            modelBuilder.Entity<Payment>(entity => {
+                entity.ToTable("Payments");
+                entity.HasOne(p => p.User)
+                      .WithMany(u => u.Payments)
+                      .HasForeignKey(p => p.UserId);
+            });
         }
     }
 }
