@@ -1,6 +1,25 @@
+using Microsoft.AspNetCore.Http;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+
 namespace DatingWebb.Models
 {
-    // Model cho trang Đăng ký
+    public class UserProfileViewModel
+    {
+        public string Bio { get; set; } = string.Empty;
+        public string? ExistingPhotoUrl { get; set; } // Fix lỗi CS1061/CS0117
+        public IFormFile? PhotoFile { get; set; }
+    }
+
+    public class SettingsViewModel // Fix lỗi CS0234
+    {
+        [Required]
+        [EmailAddress]
+        public string Email { get; set; } = string.Empty;
+        public string PhoneNumber { get; set; } = string.Empty;
+        public string? NewPassword { get; set; }
+    }
+
     public class RegisterViewModel
     {
         public string FullName { get; set; } = string.Empty;
@@ -8,20 +27,15 @@ namespace DatingWebb.Models
         public string Password { get; set; } = string.Empty;
     }
 
-    // Model cho trang Hồ sơ (Profile)
-    public class UserProfileViewModel
+    public class AdminDashboardViewModel
     {
-        public string Bio { get; set; } = string.Empty;
+        public List<AppUser> Users { get; set; } = new List<AppUser>();
+        public int TotalUsers { get; set; }
+        public int NewMembers { get; set; }
+        public int TotalMatches { get; set; }
+        public string Revenue { get; set; } = "0đ";
     }
 
-    // Model cho trang Cài đặt (Settings)
-    public class SettingsViewModel
-    {
-        public string Email { get; set; } = string.Empty;
-        public string PhoneNumber { get; set; } = string.Empty;
-    }
-
-    // Model cho trang Báo lỗi (Error)
     public class ErrorViewModel
     {
         public string? RequestId { get; set; }
