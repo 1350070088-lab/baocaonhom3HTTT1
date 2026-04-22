@@ -3,6 +3,10 @@ using DatingWebb.Models;
 using DatingWebb.Data; 
 using System.Diagnostics;
 using System.Linq;
+using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore; 
+using System.Threading.Tasks; 
+using System;
 
 namespace DatingWebb.Controllers
 {
@@ -10,94 +14,110 @@ namespace DatingWebb.Controllers
     {
         private readonly ApplicationDbContext _context;
 
-        // 1. KẾT NỐI DATABASE
         public HomeController(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        // Hàm hỗ trợ dùng chung để đếm thông báo (đếm từ bảng UserMatches)
         private void UpdateNotificationCount()
         {
-            // Đảm bảo tên bảng là UserMatches để khớp với DbContext
-            ViewBag.NotificationCount = _context.UserMatches.Count(m => m.IsActive);
+            if (_context.UserMatches != null)
+            {
+                ViewBag.NotificationCount = _context.UserMatches.Count(m => m.IsActive);
+            }
+            else
+            {
+                ViewBag.NotificationCount = 0;
+            }
         }
 
-        public IActionResult Index() 
+        // QUY TRÌNH 1: Mở web mặc định vào trang Đăng ký
+        public IActionResult Index()
+        {
+            return RedirectToAction("Register");
+        }
+
+        // --- TRANG ĐĂNG KÝ ---
+        public IActionResult Register()
         {
             UpdateNotificationCount();
-            return View();
+            return View(); 
         }
 
-        // 2. TRANG KHÁM PHÁ (Discover)
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Register(RegisterViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var newUser = new AppUser 
+                { 
+                    FullName = model.FullName,
+                    Email = model.Email,
+                    Password = model.Password, 
+                    CreatedAt = DateTime.Now,
+                    IsActive = true 
+                };
+
+                _context.AppUsers.Add(newUser);
+                await _context.SaveChangesAsync();
+
+                // GHI NHỚ Tên đăng ký vào Session để hiển thị ở góc phải
+                HttpContext.Session.SetString("UserName", newUser.FullName);
+                HttpContext.Session.SetInt32("UserId", newUser.Id);
+                
+                // QUY TRÌNH 2: Đăng ký thành công thì vào thẳng trang người dùng (Khám phá)
+                return RedirectToAction("Discover");
+            }
+            return View(model);
+        }
+
+        // --- CÁC TRANG DÀNH CHO NGƯỜI DÙNG ---
+
         public IActionResult Discover() 
         {
             UpdateNotificationCount();
-            
-            // SỬA TẠI ĐÂY: Lấy danh sách từ bảng AppUsers để xem người dùng mới
-            // Chứ không lấy từ UserMatches (bảng này chỉ chứa các lượt đã match)
             var users = _context.AppUsers.ToList(); 
             return View(users);
-        }
-
-        // 3. ACTION XỬ LÝ KHI BẤM NÚT TIM
-        [HttpPost]
-        public IActionResult LikeUser(int id)
-        {
-            // Tìm trong bảng UserMatches xem đã có lượt tương tác chưa
-            var match = _context.UserMatches.FirstOrDefault(m => m.User2Id == id);
-            if (match != null)
-            {
-                match.IsActive = true; 
-                _context.SaveChanges();
-            }
-            else 
-            {
-                // Nếu chưa có thì tạo mới một lượt match (giả sử user hiện tại là ID 1)
-                var newMatch = new Match { User1Id = 1, User2Id = id, MatchedAt = DateTime.Now, IsActive = true };
-                _context.UserMatches.Add(newMatch);
-                _context.SaveChanges();
-            }
-            
-            return RedirectToAction("Discover");
         }
 
         public IActionResult Matches() 
         {
             UpdateNotificationCount();
-            
-            // Lấy danh sách những người đã match thành công
             var matches = _context.UserMatches.Where(m => m.IsActive).ToList();
             return View(matches);
         }
 
-        public IActionResult Activity()
+        public IActionResult Messages() 
         {
             UpdateNotificationCount();
-            return View();
+            return View(); 
         }
 
-        public IActionResult Messages(string id) 
+        public IActionResult Activity() 
         {
             UpdateNotificationCount();
-            ViewBag.CurrentChat = id;
-            return View();
+            return View(); 
         }
 
-        public IActionResult Profile() 
+        public async Task<IActionResult> Profile() 
         {
             UpdateNotificationCount();
-            return View();
+            int? userId = HttpContext.Session.GetInt32("UserId");
+            if (userId == null) return RedirectToAction("Register");
+
+            var user = await _context.AppUsers.FirstOrDefaultAsync(u => u.Id == userId);
+            var model = new UserProfileViewModel
+            {
+                Bio = user?.Bio ?? "",
+                ExistingPhotoUrl = user?.ImageUrl ?? "/images/default-avatar.png"
+            };
+            return View(model);
         }
 
         public IActionResult Settings() 
         {
             UpdateNotificationCount();
-            return View();
-        }
-
-        public IActionResult Register()
-        {
             return View();
         }
 
