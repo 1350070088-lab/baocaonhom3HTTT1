@@ -2,6 +2,8 @@ using Microsoft.AspNetCore.Mvc;
 using DatingWebb.Data;
 using DatingWebb.Models;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http; 
+using System.Linq; // CẦN THIẾT: Để sử dụng hàm FirstOrDefault trong Login
 
 namespace DatingWebb.Controllers
 {
@@ -9,37 +11,66 @@ namespace DatingWebb.Controllers
     {
         private readonly ApplicationDbContext _context;
 
-        // Kết nối Database vào Controller
         public AccountController(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        // Trang Đăng ký (Hiển thị Form)
         [HttpGet]
         public IActionResult Register()
         {
             return View();
         }
 
-        // Xử lý khi bấm nút "Tạo mới"
         [HttpPost]
         public async Task<IActionResult> Register(AppUser user)
         {
             if (ModelState.IsValid)
             {
-                // 1. Thêm user vào bảng AppUsers trong Database
+                // 1. Thêm user vào database
                 _context.AppUsers.Add(user);
-                
-                // 2. Lưu lại thay đổi
                 await _context.SaveChangesAsync();
 
-                // 3. Đăng ký xong thì chuyển sang trang Matches để chọn "ghệ"
+                // 2. LÀM SẠCH VÀ LƯU MỚI SESSION
+                // Đảm bảo tên cũ (nếu có) bị xóa sạch trước khi lưu tên mới từ form
+                HttpContext.Session.Clear(); 
+                HttpContext.Session.SetString("UserFullName", user.FullName);
+
+                // 3. Chuyển sang trang Matches
                 return RedirectToAction("Matches", "Home");
             }
 
-            // Nếu lỗi thì ở lại trang Register
             return View(user);
+        }
+
+        // Hàm Login xử lý đăng nhập thực tế
+        [HttpPost]
+        public IActionResult Login(string email, string password)
+        {
+            // Kiểm tra email và password trong bảng AppUsers
+            var user = _context.AppUsers.FirstOrDefault(u => u.Email == email && u.Password == password);
+            
+            if (user != null)
+            {
+                // Nếu tìm thấy, lưu tên thật vào Session để Sidebar hiển thị
+                HttpContext.Session.SetString("UserFullName", user.FullName);
+                return RedirectToAction("Discover", "Home");
+            }
+
+            // Nếu sai thông tin, báo lỗi (Mày có thể thêm TempData để hiện thông báo lỗi)
+            ModelState.AddModelError("", "Email hoặc mật khẩu không chính xác.");
+            return View();
+        }
+
+        // Bổ sung hàm Logout để người dùng có thể thoát và xóa tên trên Sidebar
+        public IActionResult Logout()
+        {
+            HttpContext.Session.Clear();
+            return RedirectToAction("Index", "Home");
         }
     }
 }
+
+
+
+
