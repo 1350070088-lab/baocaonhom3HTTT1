@@ -9,29 +9,19 @@
             <h1 class="text-2xl font-black text-white tracking-tighter mb-6">Tin nhắn</h1>
             <div class="relative">
                 <i class="material-icons absolute left-4 top-3 text-zinc-500 text-sm">search</i>
-                <input type="text" placeholder="Tìm kiếm hội thoại..." class="w-full bg-zinc-900 border-none rounded-2xl py-3 pl-12 pr-4 text-sm text-white focus:ring-2 focus:ring-rose-500/50" />
+                <input type="text" placeholder="Tìm kiếm..." class="w-full bg-zinc-900 border-none rounded-2xl py-3 pl-12 pr-4 text-sm text-white focus:ring-2 focus:ring-rose-500/50" />
             </div>
         </div>
         
         <div class="flex-1 overflow-y-auto space-y-1 px-2 custom-scrollbar">
-            @* Item đang chat: Sẽ tự động cập nhật theo người m chọn từ trang Matches *@
             <div id="activeChatItem" class="p-4 flex items-center gap-4 bg-rose-500/10 rounded-3xl cursor-pointer border border-rose-500/20">
                 <div class="relative">
-                    <img id="sideAvatar" src="" class="w-14 h-14 rounded-full object-cover ring-2 ring-rose-500 ring-offset-2 ring-offset-zinc-950" />
+                    <img id="sideAvatar" src="/images/default-avatar.png" class="w-14 h-14 rounded-full object-cover ring-2 ring-rose-500 ring-offset-2 ring-offset-zinc-950" />
                     <div class="absolute bottom-0 right-0 w-4 h-4 bg-green-500 border-2 border-zinc-950 rounded-full"></div>
                 </div>
                 <div class="flex-1 min-w-0">
                     <h4 id="sideName" class="font-black text-sm text-white truncate">Đang tải...</h4>
-                    <p class="text-xs text-rose-400 font-black animate-pulse">Đang trực tuyến</p>
-                </div>
-            </div>
-            
-            @* Các tin nhắn chờ khác (Để demo cho đẹp) *@
-            <div class="p-4 flex items-center gap-4 opacity-50 grayscale hover:grayscale-0 transition-all cursor-pointer">
-                <img src="https://images.unsplash.com/photo-1517841905240-472988babdf9?w=100" class="w-12 h-12 rounded-full object-cover" />
-                <div class="flex-1 min-w-0">
-                    <h4 class="font-bold text-sm text-zinc-300">Hệ thống</h4>
-                    <p class="text-xs text-zinc-500 truncate">Bạn có một tương hợp mới!</p>
+                    <p class="text-xs text-rose-400 font-black animate-pulse">Trực tuyến</p>
                 </div>
             </div>
         </div>
@@ -39,42 +29,32 @@
 
     @* --- CỘT BÊN PHẢI: HỘP THOẠI --- *@
     <div class="flex-1 flex flex-col bg-zinc-900/10">
-        @* Header *@
         <div class="p-5 border-b border-zinc-800 bg-zinc-950/80 backdrop-blur-xl flex justify-between items-center z-10">
             <div class="flex items-center gap-4">
-                <img id="mainAvatar" src="" class="w-11 h-11 rounded-full object-cover border border-zinc-700" />
+                <img id="mainAvatar" src="/images/default-avatar.png" class="w-11 h-11 rounded-full object-cover border border-zinc-700" />
                 <div>
                     <h4 id="mainName" class="font-black text-white text-sm">Đang kết nối...</h4>
                     <div class="flex items-center gap-1.5">
                         <span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
-                        <p class="text-[10px] text-green-400 font-black uppercase tracking-widest">Đang hoạt động</p>
+                        <p class="text-[10px] text-green-400 font-black uppercase tracking-widest">Hoạt động</p>
                     </div>
                 </div>
             </div>
-            <div class="flex gap-2">
-                <button class="w-10 h-10 rounded-full flex items-center justify-center text-zinc-400 hover:bg-zinc-800 hover:text-rose-500 transition-all"><i class="material-icons text-xl">videocam</i></button>
-                <button class="w-10 h-10 rounded-full flex items-center justify-center text-zinc-400 hover:bg-zinc-800 hover:text-rose-500 transition-all"><i class="material-icons text-xl">call</i></button>
-                <button class="w-10 h-10 rounded-full flex items-center justify-center text-zinc-400 hover:bg-zinc-800 hover:text-rose-500 transition-all"><i class="material-icons text-xl">more_vert</i></button>
-            </div>
         </div>
 
-        @* Vùng chat *@
         <div id="chatBox" class="flex-1 overflow-y-auto p-8 space-y-6 flex flex-col custom-scrollbar bg-zinc-950">
-            @* Tin nhắn mồi từ đối phương *@
             <div class="flex gap-4 max-w-[75%] animate-fade-in">
-                <img id="bubbleAvatar" src="" class="w-8 h-8 rounded-full self-end object-cover shadow-lg" />
+                <img id="bubbleAvatar" src="/images/default-avatar.png" class="w-8 h-8 rounded-full self-end object-cover" />
                 <div class="bg-zinc-800 p-4 rounded-[2rem] rounded-bl-none border border-zinc-700 shadow-xl">
                     <p id="firstGreeting" class="text-sm text-zinc-200 leading-relaxed font-medium"></p>
                 </div>
             </div>
         </div>
 
-        @* Thanh nhập liệu *@
         <div class="p-6 bg-zinc-950 border-t border-zinc-800">
-            <div class="max-w-4xl mx-auto flex items-center gap-4 bg-zinc-900 p-2 pl-4 rounded-[2.5rem] border border-zinc-800 focus-within:border-rose-500/50 transition-all">
-                <button class="text-zinc-500 hover:text-rose-500"><i class="material-icons">add_circle</i></button>
-                <input id="chatInput" type="text" placeholder="Gửi lời chào ngọt ngào..." class="flex-1 bg-transparent border-none focus:ring-0 text-sm text-white py-2" autocomplete="off" />
-                <button id="btnSend" class="w-10 h-10 bg-rose-500 text-white rounded-full flex items-center justify-center shadow-lg shadow-rose-500/20 hover:scale-110 active:scale-95 transition-all">
+            <div class="max-w-4xl mx-auto flex items-center gap-4 bg-zinc-900 p-2 pl-4 rounded-[2.5rem] border border-zinc-800 focus-within:border-rose-500/50">
+                <input id="chatInput" type="text" placeholder="Gửi tin nhắn..." class="flex-1 bg-transparent border-none focus:ring-0 text-sm text-white py-2" autocomplete="off" />
+                <button id="btnSend" class="w-10 h-10 bg-rose-500 text-white rounded-full flex items-center justify-center">
                     <i class="material-icons text-sm">send</i>
                 </button>
             </div>
@@ -85,16 +65,15 @@
 <script>
     document.addEventListener("DOMContentLoaded", function() {
         const urlParams = new URLSearchParams(window.location.search);
-        const name = urlParams.get('name') || "Người dùng ẩn danh";
+        const name = urlParams.get('name') || "Người dùng";
         const img = urlParams.get('img') || "/images/default-avatar.png";
 
-        // Gán dữ liệu
         document.getElementById('mainName').innerText = name;
         document.getElementById('sideName').innerText = name;
         document.getElementById('mainAvatar').src = img;
         document.getElementById('sideAvatar').src = img;
         document.getElementById('bubbleAvatar').src = img;
-        document.getElementById('firstGreeting').innerText = `Chào bạn! Mình là ${name}. Rất vui được tương hợp với bạn! 😊`;
+        document.getElementById('firstGreeting').innerText = `Chào bạn! Mình là ${name}. 😊`;
 
         const input = document.getElementById('chatInput');
         const btn = document.getElementById('btnSend');
@@ -108,7 +87,6 @@
                         <div class="bg-gradient-to-br from-rose-500 to-pink-600 text-white p-4 rounded-[2rem] rounded-br-none shadow-lg max-w-[75%]">
                             <p class="text-sm font-medium">${val}</p>
                         </div>
-                        <span class="text-[9px] text-zinc-500 mr-2 font-bold uppercase tracking-tighter">Vừa gửi</span>
                     </div>
                 `;
                 chatBox.insertAdjacentHTML('beforeend', myMsg);
@@ -119,9 +97,6 @@
 
         btn.onclick = pushMessage;
         input.onkeypress = (e) => { if(e.key === 'Enter') pushMessage(); };
-        
-        // Cuộn xuống cuối khi mới load
-        setTimeout(() => { chatBox.scrollTop = chatBox.scrollHeight; }, 100);
     });
 </script>
 
