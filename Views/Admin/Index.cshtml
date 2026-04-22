@@ -1,96 +1,109 @@
 @model IEnumerable<DatingWebb.Models.AppUser>
 
-<div class="min-h-screen bg-black text-white p-8">
+@{
+    Layout = "_AdminLayout";
+}
+
+<div class="min-h-screen bg-transparent text-white p-4">
     <div class="max-w-7xl mx-auto">
-        @* Header Section *@
-        <div class="mb-10">
-            <h1 class="text-4xl font-black mb-2 text-transparent bg-clip-text bg-gradient-to-r from-rose-500 to-purple-500">
-                Admin Dashboard
-            </h1>
-            <p class="text-zinc-500 font-medium">Hệ thống quản trị và kiểm soát chỉ số Modern Love</p>
+        
+        @* --- HEADER SECTION --- *@
+        <div class="mb-10 flex justify-between items-end">
+            <div>
+                <h1 class="text-4xl font-black mb-2 text-transparent bg-clip-text bg-gradient-to-r from-rose-500 to-purple-500">
+                    Admin Dashboard
+                </h1>
+                <p class="text-zinc-500 font-medium font-bold uppercase text-[10px] tracking-[0.2em]">Hệ thống kiểm soát Modern Love</p>
+            </div>
+            <div class="text-right">
+                <p class="text-zinc-500 text-xs font-bold uppercase">Ngày hôm nay</p>
+                <p class="text-white font-black">@DateTime.Now.ToString("dd MMMM, yyyy")</p>
+            </div>
         </div>
 
         @* --- 1. 4 THẺ THỐNG KÊ --- *@
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
             @* Thẻ Tổng thành viên *@
-            <div class="bg-zinc-900/40 border border-zinc-800/50 p-6 rounded-[2.5rem] flex items-center gap-4 hover:border-rose-500/50 transition-all group">
-                <div class="w-12 h-12 bg-rose-500/10 rounded-2xl flex items-center justify-center text-rose-500 group-hover:bg-rose-500 group-hover:text-white transition-all">
+            <div class="bg-zinc-900/40 border border-zinc-800/50 p-6 rounded-[2.5rem] flex items-center gap-4 hover:border-rose-500/50 transition-all group backdrop-blur-md">
+                <div class="w-12 h-12 bg-rose-500/10 rounded-2xl flex items-center justify-center text-rose-500 group-hover:bg-rose-500 group-hover:text-white transition-all shadow-lg shadow-rose-500/10">
                     <span class="material-icons">groups</span>
                 </div>
                 <div>
                     <p class="text-zinc-500 text-[10px] font-bold uppercase tracking-widest">Tổng thành viên</p>
-                    <p class="text-2xl font-black text-white">@ViewBag.TotalUsers</p>
+                    <p class="text-2xl font-black text-white">@(ViewBag.TotalUsers ?? Model.Count())</p>
                 </div>
             </div>
 
-            @* Thẻ Thành viên mới *@
-            <div class="bg-zinc-900/40 border border-zinc-800/50 p-6 rounded-[2.5rem] flex items-center gap-4 hover:border-amber-500/50 transition-all group">
-                <div class="w-12 h-12 bg-amber-500/10 rounded-2xl flex items-center justify-center text-amber-500 group-hover:bg-amber-500 group-hover:text-white transition-all">
+            @* Thẻ Mới đăng ký *@
+            <div class="bg-zinc-900/40 border border-zinc-800/50 p-6 rounded-[2.5rem] flex items-center gap-4 hover:border-amber-500/50 transition-all group backdrop-blur-md">
+                <div class="w-12 h-12 bg-amber-500/10 rounded-2xl flex items-center justify-center text-amber-500 group-hover:bg-amber-500 group-hover:text-white transition-all shadow-lg shadow-amber-500/10">
                     <span class="material-icons">person_add</span>
                 </div>
                 <div>
-                    <p class="text-zinc-500 text-[10px] font-bold uppercase tracking-widest">Thành viên mới</p>
-                    <p class="text-2xl font-black text-white">@ViewBag.NewUsers</p>
+                    <p class="text-zinc-500 text-[10px] font-bold uppercase tracking-widest">Mới đăng ký</p>
+                    <p class="text-2xl font-black text-white">@(ViewBag.NewUsers ?? 0)</p>
                 </div>
             </div>
 
-            @* Thẻ Cặp đôi *@
-            <div class="bg-zinc-900/40 border border-zinc-800/50 p-6 rounded-[2.5rem] flex items-center gap-4 hover:border-pink-500/50 transition-all group">
-                <div class="w-12 h-12 bg-pink-500/10 rounded-2xl flex items-center justify-center text-pink-500 group-hover:bg-pink-500 group-hover:text-white transition-all">
+            @* Thẻ Cặp đôi mới *@
+            <div class="bg-zinc-900/40 border border-zinc-800/50 p-6 rounded-[2.5rem] flex items-center gap-4 hover:border-pink-500/50 transition-all group backdrop-blur-md">
+                <div class="w-12 h-12 bg-pink-500/10 rounded-2xl flex items-center justify-center text-pink-500 group-hover:bg-pink-500 group-hover:text-white transition-all shadow-lg shadow-pink-500/10">
                     <span class="material-icons">favorite</span>
                 </div>
                 <div>
                     <p class="text-zinc-500 text-[10px] font-bold uppercase tracking-widest">Cặp đôi mới</p>
-                    <p class="text-2xl font-black text-white">@ViewBag.DailyMatches</p>
+                    <p class="text-2xl font-black text-white">@(ViewBag.DailyMatches ?? 0)</p>
                 </div>
             </div>
 
             @* Thẻ Doanh thu *@
-            <div class="bg-zinc-900/40 border border-zinc-800/50 p-6 rounded-[2.5rem] flex items-center gap-4 hover:border-emerald-500/50 transition-all group">
-                <div class="w-12 h-12 bg-emerald-500/10 rounded-2xl flex items-center justify-center text-emerald-500 group-hover:bg-emerald-500 group-hover:text-white transition-all">
+            <div class="bg-zinc-900/40 border border-zinc-800/50 p-6 rounded-[2.5rem] flex items-center gap-4 hover:border-emerald-500/50 transition-all group backdrop-blur-md">
+                <div class="w-12 h-12 bg-emerald-500/10 rounded-2xl flex items-center justify-center text-emerald-500 group-hover:bg-emerald-500 group-hover:text-white transition-all shadow-lg shadow-emerald-500/10">
                     <span class="material-icons">payments</span>
                 </div>
                 <div>
                     <p class="text-zinc-500 text-[10px] font-bold uppercase tracking-widest">Doanh thu</p>
-                    <p class="text-2xl font-black text-white">@String.Format("{0:0,0}đ", ViewBag.Revenue)</p>
+                    <p class="text-2xl font-black text-white">@ViewBag.Revenue</p>
                 </div>
             </div>
         </div>
 
-        @* --- 2. BẢNG DANH SÁCH NGƯỜI DÙNG CỰC NÉT --- *@
-        <div class="bg-zinc-900/30 border border-zinc-800 rounded-[2.5rem] overflow-hidden backdrop-blur-sm">
+        @* --- 2. BẢNG DANH SÁCH NGƯỜI DÙNG --- *@
+        <div class="bg-zinc-900/30 border border-zinc-800 rounded-[2.5rem] overflow-hidden backdrop-blur-sm shadow-2xl">
             <div class="p-8 border-b border-zinc-800 flex justify-between items-center bg-zinc-900/50">
                 <div>
-                    <h2 class="text-xl font-black text-white">Danh sách người dùng mới vừa "sập bẫy"</h2>
-                    <p class="text-xs text-zinc-500 font-bold uppercase tracking-tighter mt-1">Cập nhật thời gian thực</p>
+                    <h2 class="text-xl font-black text-white">Quản lý người dùng hệ thống</h2>
+                    <p class="text-xs text-zinc-500 font-bold uppercase tracking-tighter mt-1 italic">Dữ liệu cập nhật từ SQL Server</p>
                 </div>
                 <div class="flex gap-2">
-                    <span class="bg-zinc-800 text-zinc-400 px-4 py-2 rounded-xl text-xs font-bold">@Model.Count() Users</span>
+                    <span class="bg-zinc-800 text-zinc-400 px-4 py-2 rounded-xl text-xs font-bold border border-zinc-700">@Model.Count() Users Total</span>
                 </div>
             </div>
 
             <div class="overflow-x-auto">
-                <table class="w-full text-left">
+                <table class="w-full text-left border-collapse">
                     <thead>
-                        <tr class="text-[11px] font-black uppercase tracking-widest text-zinc-500 bg-zinc-950/50">
-                            <th class="px-8 py-5">Avatar & Tên</th>
-                            <th class="px-6 py-5">Liên hệ (Email/SĐT)</th>
-                            <th class="px-6 py-5">Ngày tham gia</th>
-                            <th class="px-6 py-5">Trạng thái</th>
-                            <th class="px-8 py-5 text-right">Hành động</th>
+                        <tr class="text-[11px] font-black uppercase tracking-widest text-zinc-500 bg-zinc-950/50 border-b border-zinc-800/50">
+                            <th class="px-8 py-5">Thành viên</th>
+                            <th class="px-6 py-5">Thông tin liên hệ</th>
+                            <th class="px-6 py-5 text-center">Ngày gia nhập</th>
+                            <th class="px-6 py-5 text-center">Trạng thái</th>
+                            <th class="px-8 py-5 text-right">Thao tác</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-zinc-800/50">
                         @foreach (var user in Model)
                         {
                             <tr class="hover:bg-zinc-800/30 transition-all group">
-                                @* 1. Avatar & Tên *@
                                 <td class="px-8 py-5">
                                     <div class="flex items-center gap-4">
                                         <div class="relative">
-                                            <img src="https://ui-avatars.com/api/?name=@user.FullName&background=random&color=fff" 
+                                            @* Hiển thị Avatar - Nếu không có ảnh thì dùng UI-Avatar dựa trên FullName *@
+                                            <img src="https://ui-avatars.com/api/?name=@System.Net.WebUtility.UrlEncode(user.FullName)&background=random&color=fff&bold=true" 
                                                  class="w-12 h-12 rounded-2xl border-2 border-zinc-800 group-hover:border-rose-500/50 transition-all shadow-lg" />
-                                            @if (!user.IsReadByAdmin)
+                                            
+                                            @* Dấu chấm xanh nếu User mới đăng ký trong vòng 24h *@
+                                            @if (user.CreatedAt > DateTime.Now.AddDays(-1)) 
                                             {
                                                 <span class="absolute -top-1 -right-1 flex h-3 w-3">
                                                     <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-400 opacity-75"></span>
@@ -99,54 +112,64 @@
                                             }
                                         </div>
                                         <div>
-                                            <p class="font-bold text-white text-base">@user.FullName</p>
+                                            <p class="font-bold text-white text-base group-hover:text-rose-400 transition-colors">@user.FullName</p>
                                             <p class="text-[10px] text-zinc-500 font-black uppercase tracking-tighter">ID: #@user.Id</p>
                                         </div>
                                     </div>
                                 </td>
 
-                                @* 2. Email/SĐT *@
-                                <td class="px-6 py-5">
-                                    <p class="text-sm font-medium text-zinc-300">@user.Email</p>
-                                    <p class="text-xs text-zinc-500">098x-xxx-xxx</p> @* Sửa thành user.PhoneNumber nếu m có cột này *@
+                                <td class="px-6 py-5 text-zinc-400 text-sm font-medium">
+                                    <div class="flex flex-col">
+                                        <span>@user.Email</span>
+                                        <span class="text-[10px] text-zinc-600 uppercase font-black">Verified User</span>
+                                    </div>
                                 </td>
 
-                                @* 3. Ngày tham gia *@
-                                <td class="px-6 py-5">
+                                <td class="px-6 py-5 text-center">
                                     <p class="text-sm font-bold text-zinc-300">@user.CreatedAt.ToString("dd/MM/yyyy")</p>
-                                    <p class="text-[10px] text-zinc-500 font-black uppercase">@user.CreatedAt.ToString("HH:mm")</p>
+                                    <p class="text-[10px] text-zinc-500 font-black uppercase tracking-widest">@user.CreatedAt.ToString("HH:mm")</p>
                                 </td>
 
-                                @* 4. Trạng thái *@
-                                <td class="px-6 py-5">
+                                <td class="px-6 py-5 text-center">
+                                    @* Nếu IsReadByAdmin = false thì hiện nhãn "Mới" *@
                                     @if (!user.IsReadByAdmin)
                                     {
-                                        <span class="bg-amber-500/10 text-amber-500 text-[10px] font-black px-3 py-1 rounded-lg uppercase border border-amber-500/20">Chờ duyệt</span>
+                                        <span class="bg-rose-500/20 text-rose-500 text-[9px] font-black px-2 py-1 rounded-md uppercase border border-rose-500/30 animate-pulse">
+                                            Mới
+                                        </span>
                                     }
                                     else
                                     {
-                                        <span class="bg-emerald-500/10 text-emerald-500 text-[10px] font-black px-3 py-1 rounded-lg uppercase border border-emerald-500/20">Đã duyệt</span>
+                                        <span class="bg-emerald-500/10 text-emerald-500 text-[9px] font-black px-2 py-1 rounded-md uppercase border border-emerald-500/20">
+                                            Active
+                                        </span>
                                     }
                                 </td>
 
-                                @* 5. Hành động *@
                                 <td class="px-8 py-5 text-right">
                                     <div class="flex justify-end gap-2">
-                                        @if (!user.IsReadByAdmin)
-                                        {
-                                            <form asp-action="MarkAsRead" method="post" class="inline">
-                                                <input type="hidden" name="id" value="@user.Id" />
-                                                <button type="submit" title="Duyệt nhanh" class="p-2 bg-zinc-800 hover:bg-emerald-500 text-zinc-400 hover:text-white rounded-xl transition-all shadow-sm">
-                                                    <span class="material-icons text-sm">done_all</span>
-                                                </button>
-                                            </form>
-                                        }
-                                        <button title="Xem chi tiết" class="p-2 bg-zinc-800 hover:bg-rose-500 text-zinc-400 hover:text-white rounded-xl transition-all shadow-sm">
-                                            <span class="material-icons text-sm">visibility</span>
+                                        @* NÚT DUYỆT (ĐÁNH DẤU ĐÃ XEM) *@
+                                        <form asp-controller="Admin" asp-action="MarkAsRead" method="post" class="m-0 p-0 inline">
+                                            <input type="hidden" name="id" value="@user.Id" />
+                                            <button type="submit" title="Đánh dấu đã xem" 
+                                                    class="p-2 bg-zinc-800 hover:bg-rose-500 text-zinc-400 hover:text-white rounded-xl transition-all shadow-sm @(user.IsReadByAdmin ? "opacity-30 grayscale" : "")">
+                                                <span class="material-icons text-sm">visibility</span>
+                                            </button>
+                                        </form>
+
+                                        @* NÚT GỬI THÔNG BÁO *@
+                                        <button title="Gửi thông báo" class="p-2 bg-zinc-800 hover:bg-indigo-500 text-zinc-400 hover:text-white rounded-xl transition-all shadow-sm">
+                                            <span class="material-icons text-sm">send</span>
                                         </button>
-                                        <button title="Khóa tài khoản" class="p-2 bg-zinc-800 hover:bg-zinc-600 text-zinc-400 hover:text-white rounded-xl transition-all shadow-sm">
-                                            <span class="material-icons text-sm">block</span>
-                                        </button>
+                                        
+                                        @* NÚT XÓA NGƯỜI DÙNG *@
+                                        <form asp-controller="Admin" asp-action="DeleteUser" method="post" class="m-0 p-0 inline" 
+                                              onsubmit="return confirm('Mày có chắc muốn xóa vĩnh viễn user @user.FullName không?')">
+                                            <input type="hidden" name="id" value="@user.Id" />
+                                            <button type="submit" title="Xóa người dùng" class="p-2 bg-zinc-800 hover:bg-red-600 text-zinc-400 hover:text-white rounded-xl transition-all shadow-sm">
+                                                <span class="material-icons text-sm">delete</span>
+                                            </button>
+                                        </form>
                                     </div>
                                 </td>
                             </tr>
