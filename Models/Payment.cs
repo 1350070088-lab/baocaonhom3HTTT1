@@ -9,11 +9,12 @@ namespace DatingWebb.Models
         [Key]
         public int Id { get; set; }
 
+        // Đổi từ AppUserId thành UserId để fix lỗi CS1061
         [Required]
-        public int AppUserId { get; set; }
+        public int UserId { get; set; }
 
-        // Liên kết với bảng User
-        [ForeignKey("AppUserId")]
+        // Liên kết với bảng User để lấy thông tin người thanh toán
+        [ForeignKey("UserId")]
         public virtual AppUser? User { get; set; }
 
         [Required]
@@ -21,6 +22,7 @@ namespace DatingWebb.Models
         public decimal Amount { get; set; }
 
         [Required]
+        [StringLength(50)]
         public string Status { get; set; } = "Pending"; // Success, Failed, Pending
 
         public string? TransactionId { get; set; }
