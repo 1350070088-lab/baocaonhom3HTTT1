@@ -1,4 +1,14 @@
-﻿<!DOCTYPE html>
+@* --- BỔ SUNG: Khai báo thư viện để đọc Session --- *@
+@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor HttpContextAccessor
+@* ------------------------------------------------ *@
+
+@{
+    // Lấy tên người dùng từ Session đã lưu ở HomeController khi Register
+    var sessionName = HttpContextAccessor.HttpContext.Session.GetString("UserName");
+}
+
+<!DOCTYPE html>
 <html lang="en" class="dark"> 
 <head>
     <meta charset="utf-8" />
@@ -17,7 +27,7 @@
             background-color: #09090b; 
         }
         
-        /* Tùy chỉnh thanh cuộn */
+        /* Tùy chỉnh thanh cuộn chuyên nghiệp */
         ::-webkit-scrollbar { width: 5px; }
         ::-webkit-scrollbar-track { background: #18181b; }
         ::-webkit-scrollbar-thumb { 
@@ -52,13 +62,15 @@
     <div class="flex min-h-screen"> 
         @* Thanh bên trái (Menu dọc) *@
         <aside class="hidden md:block sticky top-0 h-screen flex-shrink-0 border-r border-zinc-800/50">
+            @* Mẹo: Sidebar sẽ tự động nhận diện Session bên trong nó 
+               nếu mày dùng @inject IHttpContextAccessor tương tự ở file _Sidebar.cshtml 
+            *@
             @await Html.PartialAsync("_Sidebar")
         </aside>
 
         <div class="flex-1 flex flex-col relative">
             
             @* Thanh trên cùng (Menu ngang & Profile) *@
-            @* Chú ý: ViewComponent đếm số người dùng thật nằm bên trong Topbar *@
             @await Html.PartialAsync("_Topbar")
 
             @* Nội dung thay đổi theo từng trang *@
@@ -75,6 +87,10 @@
                             &copy; 2026 — <span class="text-rose-500">Modern Love</span>
                         </p>
                     </div>
+                    @if (!string.IsNullOrEmpty(sessionName))
+                    {
+                        <p class="text-zinc-600 text-[9px] mb-1">Đang đăng nhập: <span class="text-zinc-400">@sessionName</span></p>
+                    }
                     <p class="text-zinc-600 text-[9px] italic">Thiết kế bằng cả trái tim để kết nối mọi người.</p>
                 </div>
             </footer>
@@ -88,7 +104,6 @@
     <script>
         let notificationCount = 0;
 
-        // Hàm ẩn/hiện bảng thông báo
         function toggleNotif() {
             const dropdown = document.getElementById('notif-dropdown');
             if(dropdown) {
@@ -96,7 +111,6 @@
             }
         }
 
-        // Hàm thêm thông báo mới từ hành động Like (Thông báo ảo trên trình duyệt)
         function addNewNotification(userName) {
             notificationCount++;
             
@@ -134,7 +148,7 @@
             }
         }
 
-        // Đóng dropdown khi click ra ngoài
+        // Đóng dropdown khi nhấn ra ngoài
         window.onclick = function(event) {
             if (!event.target.closest('#notif-dropdown') && !event.target.closest('button[onclick="toggleNotif()"]')) {
                 const dropdown = document.getElementById('notif-dropdown');
