@@ -1,3 +1,26 @@
+@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor HttpContextAccessor
+
+@{
+    // 1. Lấy tên từ Session (Đồng bộ key "UserName" với HomeController)
+    var sessionName = HttpContextAccessor.HttpContext.Session.GetString("UserName");
+    
+    // 2. Nếu chưa có tên thì mặc định là "Người Dùng"
+    var displayName = string.IsNullOrEmpty(sessionName) ? "Người Dùng" : sessionName;
+
+    // 3. Logic tạo chữ cái viết tắt cho Avatar (Ví dụ: "Lê Văn" -> "LV")
+    string initials = "U"; 
+    if (!string.IsNullOrEmpty(sessionName))
+    {
+        var words = sessionName.Trim().Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+        if (words.Length >= 2) {
+            initials = (words[0][0].ToString() + words[words.Length - 1][0].ToString()).ToUpper();
+        } else if (words.Length == 1) {
+            initials = words[0][0].ToString().ToUpper();
+        }
+    }
+}
+
 <header class="h-20 bg-white dark:bg-zinc-950 border-b border-zinc-200 dark:border-zinc-800 flex items-center justify-between px-8 sticky top-0 z-50">
     
     @* Logo ứng dụng *@
@@ -28,7 +51,7 @@
             }
         </a>
 
-        <a asp-controller="Home" asp-action="Messages" 
+        <a asp-controller="Home" asp-action="Messages"
            class="relative py-2 text-sm font-black uppercase tracking-widest transition-all @(ViewContext.RouteData.Values["Action"]?.ToString() == "Messages" ? "text-rose-500" : "text-zinc-400 hover:text-zinc-900 dark:hover:text-white")">
             Tin nhắn
             @if (ViewContext.RouteData.Values["Action"]?.ToString() == "Messages") {
@@ -44,41 +67,32 @@
             }
         </a>
 
-        <a asp-controller="Home" asp-action="Profile" 
-           class="relative py-2 text-sm font-black uppercase tracking-widest transition-all @(ViewContext.RouteData.Values["Action"]?.ToString() == "Profile" ? "text-rose-500" : "text-zinc-400 hover:text-zinc-900 dark:hover:text-white")">
-            Hồ sơ
-            @if (ViewContext.RouteData.Values["Action"]?.ToString() == "Profile") {
-                <span class="absolute -bottom-1 left-0 w-full h-0.5 bg-rose-500 rounded-full"></span>
-            }
-        </a>
-
-        @* Link vào trang Admin - Được tinh chỉnh lại *@
-        <a asp-controller="Admin" asp-action="Index" 
-           class="relative py-2 flex items-center gap-1 text-sm font-black uppercase tracking-widest transition-all @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Admin" ? "text-rose-500" : "text-zinc-400 hover:text-zinc-900 dark:hover:text-white")">
-            Quản trị
-            <div class="relative inline-block mb-3">
-                 @await Component.InvokeAsync("AdminNotification")
-            </div>
-            @if (ViewContext.RouteData.Values["Controller"]?.ToString() == "Admin") {
-                <span class="absolute -bottom-1 left-0 w-full h-0.5 bg-rose-500 rounded-full"></span>
-            }
-        </a>
+        @* Link vào trang Admin - Check điều kiện an toàn hơn *@
+        @if (displayName != null && (displayName.Contains("Admin") || displayName == "Quản trị viên")) 
+        {
+            <a asp-controller="Admin" asp-action="Index" 
+               class="relative py-2 flex items-center gap-1 text-sm font-black uppercase tracking-widest transition-all @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Admin" ? "text-rose-500" : "text-zinc-400 hover:text-zinc-900 dark:hover:text-white")">
+                Quản trị
+                <div class="relative inline-block ml-1">
+                     @await Component.InvokeAsync("AdminNotification")
+                </div>
+            </a>
+        }
     </nav>
 
     @* Khu vực chức năng bên phải *@
     <div class="flex items-center gap-5">
         
-        @* CỤM THÔNG BÁO KIỂU FACEBOOK *@
+        @* CỤM THÔNG BÁO *@
         <div class="relative inline-block">
             <button onclick="toggleNotif()" class="relative w-10 h-10 flex items-center justify-center text-zinc-400 hover:text-rose-500 transition-colors">
                 <i class="material-icons">notifications</i>
-                @* Chấm số thông báo ảo từ JS (cho hành động Like) *@
                 <span id="notif-count" class="hidden absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-rose-500 text-[10px] font-bold text-white border-2 border-white dark:border-zinc-950">
                     0
                 </span>
             </button>
-
-            @* Bảng danh sách thông báo thả xuống *@
+            
+            @* Dropdown thông báo *@
             <div id="notif-dropdown" class="hidden absolute right-0 mt-3 w-80 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl shadow-2xl z-[100] overflow-hidden">
                 <div class="p-4 border-b border-zinc-100 dark:border-zinc-800 flex justify-between items-center">
                     <h3 class="text-sm font-black text-zinc-900 dark:text-white">Thông báo</h3>
@@ -101,12 +115,17 @@
             Nâng cấp VIP
         </button>
 
+        @* Thông tin người dùng thực tế *@
         <div class="flex items-center gap-3 pl-4 border-l border-zinc-200 dark:border-zinc-800">
             <div class="text-right hidden sm:block">
-                <p class="text-xs font-black text-zinc-900 dark:text-white leading-none mb-1">Người Dùng</p>
+                <p class="text-xs font-black text-zinc-900 dark:text-white leading-none mb-1">@displayName</p>
                 <p class="text-[9px] text-zinc-400 font-bold uppercase tracking-tighter">Thành viên Pro</p>
             </div>
-            <img src="https://ui-avatars.com/api/?name=User+Name&background=f43f5e&color=fff" class="w-10 h-10 rounded-full object-cover border-2 border-zinc-100 dark:border-zinc-800" />
+            
+            @* Avatar tròn với chữ cái viết tắt *@
+            <div class="w-10 h-10 rounded-full bg-gradient-to-br from-rose-500 to-rose-600 flex items-center justify-center text-white font-black text-xs border-2 border-white dark:border-zinc-800 shadow-sm" title="@displayName">
+                @initials
+            </div>
         </div>
     </div>
 </header>
