@@ -1,65 +1,83 @@
-<aside class="h-screen w-64 bg-zinc-50 dark:bg-zinc-900 border-r border-zinc-200 dark:border-zinc-800 flex flex-col p-4 gap-2">
+@* --- BỔ SUNG: Khai báo để dùng Session --- *@
+@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor HttpContextAccessor
+
+@{
+    // Lấy tên hiển thị từ Session. Key "UserName" khớp với HomeController
+    var displayName = HttpContextAccessor.HttpContext.Session.GetString("UserName");
+    var currentAction = ViewContext.RouteData.Values["Action"]?.ToString();
+    var currentController = ViewContext.RouteData.Values["Controller"]?.ToString();
+}
+
+<aside class="h-screen w-64 bg-zinc-950 border-r border-zinc-800 flex flex-col p-4 gap-2">
     
-    @* Phần chào mừng người dùng *@
-    <div class="mb-8 px-4 py-6">
-        <h2 class="text-zinc-400 text-[10px] font-bold uppercase tracking-widest mb-1">Chào mừng trở lại</h2>
-        <p class="text-xl font-black text-zinc-900 dark:text-white">Người Dùng</p> 
+    @* Phần chào mừng người dùng - Tự động cập nhật tên *@
+    <div class="mb-8 px-4 py-6 border-b border-zinc-900">
+        <h2 class="text-zinc-500 text-[10px] font-bold uppercase tracking-widest mb-1 italic">Chào mừng trở lại</h2>
+        <p class="text-xl font-black text-white truncate" title="@displayName">
+            @(string.IsNullOrEmpty(displayName) ? "Người Dùng" : displayName)
+        </p> 
     </div>
 
     @* Danh sách Menu điều hướng *@
     <nav class="flex-1 space-y-1">
+        
+        @* NHÓM USER *@
+        <div class="px-4 mb-2">
+            <span class="text-zinc-600 text-[9px] font-black uppercase tracking-[0.2em]">Cá nhân</span>
+        </div>
+
         <a asp-controller="Home" asp-action="Discover" 
-           class="flex items-center gap-3 @(ViewContext.RouteData.Values["Action"]?.ToString() == "Discover" ? "bg-white dark:bg-zinc-800 text-rose-600 shadow-sm font-semibold" : "text-zinc-500 hover:bg-rose-50 dark:hover:bg-rose-900/20") rounded-2xl p-3 transition-all hover:scale-105">
-            <i class="material-icons">explore</i> <span>Khám phá</span>
+           class="flex items-center gap-3 @(currentAction == "Discover" && currentController == "Home" ? "bg-zinc-900 text-rose-500 shadow-sm font-bold" : "text-zinc-400 hover:bg-zinc-900 hover:text-white") rounded-2xl p-3 transition-all">
+            <i class="material-icons text-sm">explore</i> <span>Khám phá</span>
         </a>
 
         <a asp-controller="Home" asp-action="Matches" 
-           class="flex items-center gap-3 @(ViewContext.RouteData.Values["Action"]?.ToString() == "Matches" ? "bg-white dark:bg-zinc-800 text-rose-600 shadow-sm font-semibold" : "text-zinc-500 hover:bg-rose-50 dark:hover:bg-rose-900/20") p-3 rounded-2xl transition-all">
-            <i class="material-icons">favorite</i> <span>Tương hợp</span>
+           class="flex items-center gap-3 @(currentAction == "Matches" ? "bg-zinc-900 text-rose-500 shadow-sm font-bold" : "text-zinc-400 hover:bg-zinc-900 hover:text-white") p-3 rounded-2xl transition-all">
+            <i class="material-icons text-sm">favorite</i> <span>Tương hợp</span>
         </a>
 
         <a asp-controller="Home" asp-action="Messages" 
-           class="flex items-center gap-3 @(ViewContext.RouteData.Values["Action"]?.ToString() == "Messages" ? "bg-white dark:bg-zinc-800 text-rose-600 shadow-sm font-semibold" : "text-zinc-500 hover:bg-rose-50 dark:hover:bg-rose-900/20") p-3 rounded-2xl transition-all">
-            <i class="material-icons">chat</i> <span>Tin nhắn</span>
-        </a>
-
-        <a asp-controller="Home" asp-action="Activity" 
-           class="flex items-center gap-3 @(ViewContext.RouteData.Values["Action"]?.ToString() == "Activity" ? "bg-white dark:bg-zinc-800 text-rose-600 shadow-sm font-semibold" : "text-zinc-500 hover:bg-rose-50 dark:hover:bg-rose-900/20") p-3 rounded-2xl transition-all">
-            <i class="material-icons">auto_awesome</i> <span>Hoạt động</span>
-        </a>
-
-        @* Nút Quản trị dành cho Admin (Có chấm đỏ thông báo thật) *@
-        <a asp-controller="Admin" asp-action="Index" 
-           class="flex items-center justify-between gap-3 @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Admin" ? "bg-white dark:bg-zinc-800 text-rose-600 shadow-sm font-semibold" : "text-zinc-500 hover:bg-rose-50 dark:hover:bg-rose-900/20") p-3 rounded-2xl transition-all">
-            <div class="flex items-center gap-3">
-                <i class="material-icons">admin_panel_settings</i> 
-                <span>Quản trị</span>
-            </div>
-            
-            @* Gọi ViewComponent hiển thị số lượng User mới *@
-            <div class="relative">
-                @await Component.InvokeAsync("AdminNotification")
-            </div>
+           class="flex items-center gap-3 @(currentAction == "Messages" ? "bg-zinc-900 text-rose-500 shadow-sm font-bold" : "text-zinc-400 hover:bg-zinc-900 hover:text-white") p-3 rounded-2xl transition-all">
+            <i class="material-icons text-sm">chat</i> <span>Tin nhắn</span>
         </a>
 
         <a asp-controller="Home" asp-action="Profile" 
-           class="flex items-center gap-3 @(ViewContext.RouteData.Values["Action"]?.ToString() == "Profile" ? "bg-white dark:bg-zinc-800 text-rose-600 shadow-sm font-semibold" : "text-zinc-500 hover:bg-rose-50 dark:hover:bg-rose-900/20") p-3 rounded-2xl transition-all">
-            <i class="material-icons">person</i> <span>Hồ sơ</span>
+           class="flex items-center gap-3 @(currentAction == "Profile" ? "bg-zinc-900 text-rose-500 shadow-sm font-bold" : "text-zinc-400 hover:bg-zinc-900 hover:text-white") p-3 rounded-2xl transition-all">
+            <i class="material-icons text-sm">person</i> <span>Hồ sơ</span>
         </a>
 
+        @* --- ĐÃ THÊM LẠI MỤC CÀI ĐẶT --- *@
         <a asp-controller="Home" asp-action="Settings" 
-           class="flex items-center gap-3 @(ViewContext.RouteData.Values["Action"]?.ToString() == "Settings" ? "bg-white dark:bg-zinc-800 text-rose-600 shadow-sm font-semibold" : "text-zinc-500 hover:bg-rose-50 dark:hover:bg-rose-900/20") p-3 rounded-2xl transition-all">
-            <i class="material-icons">settings</i> <span>Cài đặt</span>
+           class="flex items-center gap-3 @(currentAction == "Settings" ? "bg-zinc-900 text-rose-500 shadow-sm font-bold" : "text-zinc-400 hover:bg-zinc-900 hover:text-white") p-3 rounded-2xl transition-all">
+            <i class="material-icons text-sm">settings</i> <span>Cài đặt</span>
         </a>
+
+        @* NHÓM QUẢN TRỊ - Chỉ hiện cho Admin *@
+        @if (displayName != null && displayName.ToLower().Contains("admin")) 
+        {
+            <div class="px-4 mt-6 mb-2">
+                <span class="text-zinc-600 text-[9px] font-black uppercase tracking-[0.2em]">Hệ thống</span>
+            </div>
+
+            <a asp-controller="Admin" asp-action="Index" 
+               class="flex items-center gap-3 @(currentController == "Admin" ? "bg-zinc-800 border-l-4 border-rose-500 text-white font-bold" : "text-zinc-400 hover:bg-zinc-900 hover:text-white") p-3 rounded-2xl transition-all">
+                <i class="material-icons text-sm @(currentController == "Admin" ? "text-rose-500" : "")">admin_panel_settings</i> 
+                <span>Quản trị hệ thống</span>
+            </a>
+            
+            <a href="#" class="flex items-center gap-3 text-zinc-400 hover:bg-zinc-900 hover:text-white p-3 rounded-2xl transition-all">
+                <i class="material-icons text-sm">report</i> <span>Báo cáo vi phạm</span>
+            </a>
+        }
     </nav>
     
-    @* Thẻ quảng cáo VIP *@
-    <div class="p-4 bg-gradient-to-br from-rose-500 to-violet-600 rounded-3xl text-white shadow-lg shadow-rose-500/30 mt-4">
-        <p class="text-sm font-bold uppercase tracking-tight">Tăng tốc tuần</p>
-        <p class="text-[10px] opacity-90 mb-3">Tăng 3 lần khả năng tìm thấy nửa kia!</p>
-        <button class="w-full bg-white text-rose-600 py-2 rounded-xl text-[10px] font-black hover:bg-zinc-100 transition-colors">
-            NÂNG CẤP NGAY
-        </button>
+    @* Nút Thoát *@
+    <div class="mt-auto pt-4 border-t border-zinc-900">
+        <a asp-controller="Home" asp-action="Logout" 
+           class="flex items-center gap-3 text-zinc-500 hover:text-rose-500 p-3 transition-all font-bold text-[10px] uppercase tracking-widest">
+            <i class="material-icons text-sm">logout</i> <span>Đăng xuất</span>
+        </a>
     </div>
 
 </aside>
